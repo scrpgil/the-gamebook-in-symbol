@@ -4,7 +4,7 @@ import { IonReactRouter } from '@ionic/react-router';
 import { Redirect, Route } from 'react-router-dom';
 import Menu from './Menu';
 
-import Tabs from './pages/Tabs';
+import Home from './pages/Home';
 
 import { setupIonicReact } from '@ionic/react';
 
@@ -15,10 +15,8 @@ const AppShell = () => {
     <IonApp>
       <IonReactRouter>
         <IonSplitPane contentId="main">
-          <Menu />
           <IonRouterOutlet id="main">
-            <Route path="/tabs" render={() => <Tabs />} />
-            <Route exact path="/" render={() => <Redirect to="/tabs" />} />
+            <Route path="/" render={() => <Home />} />
           </IonRouterOutlet>
         </IonSplitPane>
       </IonReactRouter>
