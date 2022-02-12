@@ -351,7 +351,6 @@ const Home: React.FC = () => {
       </IonContent>
       <IonFooter>
         <div className="credit">
-          <span className="link-wrapper">write</span>
           <span
             className="link-wrapper"
             onClick={() => {

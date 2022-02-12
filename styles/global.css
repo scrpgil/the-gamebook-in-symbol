@@ -221,6 +221,10 @@ body {
   white-space: pre-wrap;
 }
 
+.message-wrapper a {
+  border-bottom: 1px solid white;
+}
+
 .fetch-wrapper,
 .convert-wrapper {
   max-width: 800px;

@@ -53,7 +53,7 @@ export const replaceAnchor = (value: string): string => {
   var regexp_url = /&gt;&gt;([0-9]*)/g; // ']))/;
   var regexp_makeLink = (_: any, url: string, ___: any, ____: string) => {
     const hash = '?id=' + url;
-    return `<a target="_blank" href="${hash}">>>${url}</a>`;
+    return `<a class="border-b" target="_blank" href="${hash}">>>${url}</a>`;
   };
   return value.replace(regexp_url, regexp_makeLink);
 };
