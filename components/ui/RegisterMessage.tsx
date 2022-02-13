@@ -60,11 +60,11 @@ const RegisterMessage = (props) => {
       </div>
       <div className="pt-3">
         <label className="text-sm" htmlFor="input_private_key">
-          Private Key
+          Private Key（送金用ウォレットのKey）
         </label>
         <input
           className="input-numbering-address"
-          type="text"
+          type="password"
           name="input_private_key"
           value={privKey}
           onChange={handleChange}

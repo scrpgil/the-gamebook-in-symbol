@@ -1,5 +1,6 @@
 import { IonButton } from '@ionic/react';
 import { useState } from 'react';
+import { createNewAccount } from 'services/symbol';
 
 const RegisterAddress = (props) => {
   const { onClick } = props;
@@ -22,17 +23,16 @@ const RegisterAddress = (props) => {
         console.log('key not found');
     }
   };
+  const onGenerateAccount = async () => {
+    let account = await createNewAccount();
+    setRegistAddress(account.address.plain());
+  };
   return (
     <div>
       <p className="py-2">
         あなたは任意の文字列とSymbolアドレスを組み合わせることで、
         <br />
         このGamebookに番地を登録することができます。
-      </p>
-      <p className="py-2">
-        ひょっとしたら、すでに番地を取得されている可能性もありますが、
-        <br />
-        その場合は、先に登録したものを優先します。
       </p>
       <div className="pt-3">
         <label className="text-sm" htmlFor="regist_address">
@@ -48,7 +48,10 @@ const RegisterAddress = (props) => {
       </div>
       <div className="pt-3">
         <label className="text-sm" htmlFor="regist_sym_address">
-          Symbolのアドレス
+          Symbolのアドレス{' '}
+          <button className="border-b-2 mb-1 ml-2" onClick={onGenerateAccount}>
+            自動生成
+          </button>
         </label>
         <input
           className="input-numbering-address"
@@ -60,7 +63,7 @@ const RegisterAddress = (props) => {
       </div>
       <div className="pt-3">
         <label className="text-sm" htmlFor="input_private_key">
-          Private Key
+          Private Key（送金用ウォレットのKey）
         </label>
         <input
           className="input-numbering-address"

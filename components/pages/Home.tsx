@@ -9,10 +9,12 @@ import {
   IonTitle,
   IonToolbar,
   useIonAlert,
+  useIonLoading,
   useIonViewDidEnter,
   useIonViewWillEnter,
 } from '@ionic/react';
 import Empty from 'components/ui/Empty';
+import EmptyAddress from 'components/ui/EmptyAddress';
 import Footer from 'components/ui/Footer';
 import InputAddress from 'components/ui/InputAddress';
 import RegisterAddress from 'components/ui/RegisterAddress';
@@ -37,9 +39,12 @@ import { getHashVariable, replaceImage, sanitize } from '../../services/util';
 
 const Home: React.FC = () => {
   const [present] = useIonAlert();
+  const [loadingPresent, loadingDismiss] = useIonLoading();
+
   const [address, setAddress] = useState('1');
   const [readAddress, setReadAddress] = useState<NumberingAddress>();
   const [message, setMessage] = useState<string>('');
+  const [isEmptyAddress, setIsEmptyAddress] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const numberingMessages = useRef<NumberingAddress[]>([]);
   const [fee, setFee] = useState(0);
@@ -65,7 +70,9 @@ const Home: React.FC = () => {
 
   const getAddressMessages = async (address: string) => {
     const transactions = await getAllTransaction(address);
-    setMessage(transactions[0].message.payload);
+    if (transactions && transactions.length > 0 && transactions[0]?.message?.payload) {
+      setMessage(transactions[0].message.payload);
+    }
   };
 
   useIonViewWillEnter(async () => {
@@ -80,6 +87,9 @@ const Home: React.FC = () => {
     let nmm = await getSearchAddressMessages(addr, nm);
     if (nmm) {
       getNumberingAddress(nmm);
+      setIsEmptyAddress(false);
+    } else {
+      setIsEmptyAddress(true);
     }
     setTimeout(() => {
       setLoading(false);
@@ -98,9 +108,21 @@ const Home: React.FC = () => {
    * 番地の登録
    */
   const registToAddress = async (registAddressText, registAddress, privKey) => {
-    let msg = await createRegistAddressMessage(registAddressText, registAddress);
-    let tt = await createTransferTransaction(NUMBERING_ADDRESS, msg, privKey);
-    transactionAnnounce(tt);
+    try {
+      loadingPresent({
+        message: '番地登録中...',
+        mode: 'ios',
+      });
+      let msg = await createRegistAddressMessage(registAddressText, registAddress);
+      let tt = await createTransferTransaction(NUMBERING_ADDRESS, msg, privKey);
+      await transactionAnnounce(tt);
+      setTimeout(() => {
+        location.href = `${location.protocol}//${location.host}/#${registAddress}`;
+        location.reload();
+      }, 30000);
+    } catch (e) {
+      loadingDismiss();
+    }
   };
 
   /**
@@ -109,8 +131,20 @@ const Home: React.FC = () => {
   const registToMessage = async (registAddressText, registMessage, privKey) => {
     let nmm = await getSearchAddressMessages(registAddressText, numberingMessages.current);
     if (nmm) {
-      let tt = await createTransferTransaction(nmm.address, registMessage, privKey);
-      transactionAnnounce(tt);
+      try {
+        loadingPresent({
+          message: 'メッセージ書き込み中...',
+          mode: 'ios',
+        });
+        let tt = await createTransferTransaction(nmm.address, registMessage, privKey);
+        await transactionAnnounce(tt);
+        setTimeout(() => {
+          location.href = `${location.protocol}//${location.host}/#${nmm.text}`;
+          location.reload();
+        }, 30000);
+      } catch (e) {
+        loadingDismiss();
+      }
     }
   };
 
@@ -125,6 +159,9 @@ const Home: React.FC = () => {
     let nmm = await getSearchAddressMessages(fetchAddrss, numberingMessages.current);
     if (nmm) {
       getNumberingAddress(nmm);
+      setIsEmptyAddress(false);
+    } else {
+      setIsEmptyAddress(true);
     }
     setLoading(true);
     setTimeout(() => {
@@ -174,12 +211,13 @@ const Home: React.FC = () => {
                 {readAddress?.text !== 'regist_address' && readAddress?.text !== 'regist_message' && (
                   <>
                     <div
-                      className="whitespace-pre-wrap"
+                      className="whitespace-pre-wrap leading-7"
                       dangerouslySetInnerHTML={{
                         __html: replaceImage(replaceNumberingAnchor(sanitize(message))),
                       }}
                     ></div>
-                    {!message && <Empty />}
+                    {!message && isEmptyAddress && <EmptyAddress />}
+                    {!message && !isEmptyAddress && <Empty />}
                   </>
                 )}
               </>

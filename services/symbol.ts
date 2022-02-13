@@ -2,6 +2,7 @@ import {
   Account,
   Address,
   Deadline,
+  NetworkType,
   Page,
   PlainMessage,
   RepositoryFactoryHttp,
@@ -138,4 +139,12 @@ export const transactionAnnounce = async (signedTransaction: SignedTransaction) 
   const repositoryFactory = new RepositoryFactoryHttp(NODE_URL);
   const transactionRepository = repositoryFactory.createTransactionRepository();
   const response = await transactionRepository.announce(signedTransaction).toPromise();
+  return response;
+};
+
+export const createNewAccount = async (): Promise<Account> => {
+  const repositoryFactory = new RepositoryFactoryHttp(NODE_URL);
+  const networkType = await repositoryFactory.getNetworkType().toPromise();
+  const account = Account.generateNewAccount(networkType);
+  return account;
 };
