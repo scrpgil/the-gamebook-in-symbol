@@ -22,6 +22,7 @@ import RegisterMessage from 'components/ui/RegisterMessage';
 import { helpCircleOutline } from 'ionicons/icons';
 
 import { useRef, useState } from 'react';
+import { NUMBERING_ADDRESS } from 'services/const';
 import {
   createRegistAddressMessage,
   decodeNumberingAddress,
@@ -32,7 +33,7 @@ import {
   createTransferTransaction,
   getAllRawMessages,
   getAllTransaction,
-  NUMBERING_ADDRESS,
+  getTransaction,
   transactionAnnounce,
 } from '../../services/symbol';
 import { getHashVariable, replaceImage, sanitize } from '../../services/util';
@@ -69,7 +70,7 @@ const Home: React.FC = () => {
   };
 
   const getAddressMessages = async (address: string) => {
-    const transactions = await getAllTransaction(address);
+    const transactions = await getTransaction(address);
     if (transactions && transactions.length > 0 && transactions[0]?.message?.payload) {
       setMessage(transactions[0].message.payload);
     }

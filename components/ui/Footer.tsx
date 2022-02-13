@@ -1,4 +1,4 @@
-import { SYMBOL_EXPLORER } from 'services/symbol';
+import { SYMBOL_EXPLORER } from 'services/const';
 
 const Footer = (props) => {
   const { readAddress } = props;

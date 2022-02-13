@@ -11,22 +11,36 @@ import {
   TransferTransaction,
   UInt64,
 } from 'symbol-sdk';
+import { NODE_URL, NUMBERING_ADDRESS } from './const';
 import { RawNumberingAddress } from './gamebook';
-/** TESTNETのURL */
-// export const NODE_URL = "https://sym-test-01.opening-line.jp:3001";
-// export const NODE_URL = 'https://sym-test-02.opening-line.jp:3001';
-export const NODE_URL = 'https://sym-main.opening-line.jp:3001';
-
-/** 番地用アドレス */
-// export const NUMBERING_ADDRESS = 'TD6Y6MAG4AR2CMWJWQ3DZP3PT5QZ74TDUTNSKPY';
-export const NUMBERING_ADDRESS = 'NC3F3E2EZT4JRPLUSYMD2QHWKW353GJUBP2NSPA';
-
-/** Explorer */
-// export const SYMBOL_EXPLORER = 'https://testnet.symbol.fyi/';
-export const SYMBOL_EXPLORER = 'https://symbol.fyi/';
 
 export const getAllTransaction = (
   rawAddress: string = NUMBERING_ADDRESS,
+): Promise<TransferTransaction[]> => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      let transactions = [];
+      let loop = true;
+      let pageNumber = 1;
+      while (loop) {
+        const res = await getTransaction(rawAddress, pageNumber);
+        if (res && res.length > 0) {
+          transactions = transactions.concat(res);
+        } else {
+          loop = false;
+        }
+        pageNumber++;
+      }
+      resolve(transactions);
+    } catch (e) {
+      resolve([]);
+    }
+  });
+};
+
+export const getTransaction = (
+  rawAddress: string = NUMBERING_ADDRESS,
+  pageNumber: number = 1,
 ): Promise<TransferTransaction[]> => {
   return new Promise((resolve, reject) => {
     const address = Address.createFromRawAddress(rawAddress);
@@ -36,7 +50,7 @@ export const getAllTransaction = (
     const searchCriteria = {
       group: TransactionGroup.Confirmed,
       address,
-      pageNumber: 1,
+      pageNumber: pageNumber,
       pageSize: 100,
     };
     transactionHttp.search(searchCriteria).subscribe(

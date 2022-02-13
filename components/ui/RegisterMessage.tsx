@@ -1,6 +1,7 @@
 import { IonButton } from '@ionic/react';
 import { useState } from 'react';
-import { createTransferTransaction, NUMBERING_ADDRESS } from 'services/symbol';
+import { NUMBERING_ADDRESS } from 'services/const';
+import { createTransferTransaction } from 'services/symbol';
 
 const RegisterMessage = (props) => {
   const { onClick } = props;
