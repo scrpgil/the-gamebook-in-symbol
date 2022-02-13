@@ -176,16 +176,8 @@ const Home: React.FC = () => {
           <IonTitle>The world is a gamebook</IonTitle>
           <IonButtons slot="primary">
             <IonButton
-              onClick={() =>
-                present({
-                  cssClass: 'my-css',
-                  header: '遊び方',
-                  message:
-                    'ゲームブック (Gamebook) は、読者の選択によってストーリーの展開と結末が変わるように作られています。文章は、数百個のパラグラフに分割されており、ルールに沿って読み進めることになります。',
-                  buttons: ['Cancel', { text: 'Ok', handler: (d) => console.log('ok pressed') }],
-                  onDidDismiss: (e) => console.log('did dismiss'),
-                })
-              }
+              href="https://scrpgil.notion.site/The-world-is-gamebook-in-Symbol-fb71a6a1680940979f670ffcea15abd5"
+              target="_blank"
             >
               <IonIcon slot="icon-only" icon={helpCircleOutline} />
             </IonButton>
