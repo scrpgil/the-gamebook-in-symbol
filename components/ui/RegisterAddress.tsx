@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { createNewAccount } from 'services/symbol';
 
 const RegisterAddress = (props) => {
-  const { onClick } = props;
+  const { onClick, fee } = props;
   const [registAddress, setRegistAddress] = useState('');
   const [registAddressText, setRegistAddressText] = useState('');
   const [privKey, setPrivKey] = useState('');
@@ -83,7 +83,7 @@ const RegisterAddress = (props) => {
             onClick(registAddressText, registAddress, privKey);
           }}
         >
-          Regist to Address
+          Regist to Address（Fee: Max 2.0xym）
         </IonButton>
       </div>
     </div>

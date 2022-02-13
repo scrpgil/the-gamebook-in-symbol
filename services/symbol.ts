@@ -118,6 +118,7 @@ export const createTransferTransaction = async (
   rawAddress: string,
   message: string,
   privateKey: string,
+  maxFee: number,
 ): Promise<SignedTransaction> => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -131,6 +132,12 @@ export const createTransferTransaction = async (
       const epochAdjustment = await repositoryFactory.getEpochAdjustment().toPromise();
       const networkType = await repositoryFactory.getNetworkType().toPromise();
       const { currency } = await repositoryFactory.getCurrencies().toPromise();
+      let fee = maxFee;
+      if (fee <= 100) {
+        fee = 100;
+      } else if (fee >= 2000000) {
+        fee = 2000000;
+      }
 
       const transferTransaction = TransferTransaction.create(
         Deadline.create(epochAdjustment),
@@ -138,8 +145,8 @@ export const createTransferTransaction = async (
         [currency.createRelative(0)],
         PlainMessage.create(message),
         networkType,
-        UInt64.fromUint(1000000),
-      );
+        UInt64.fromUint(fee),
+      ).setMaxFee(fee);
       const account = Account.createFromPrivateKey(privateKey, networkType);
       const networkGenerationHash = await repositoryFactory.getGenerationHash().toPromise();
       let signedTransaction: SignedTransaction = account.sign(
@@ -166,4 +173,14 @@ export const createNewAccount = async (): Promise<Account> => {
   const networkType = await repositoryFactory.getNetworkType().toPromise();
   const account = Account.generateNewAccount(networkType);
   return account;
+};
+
+export const calcTransactionFee = async () => {
+  const nodeUrl = NODE_URL;
+  const repositoryHttp = new RepositoryFactoryHttp(nodeUrl);
+  const networkHttp = repositoryHttp.createNetworkRepository();
+  const transactionFees = await (
+    await networkHttp.getTransactionFees().toPromise()
+  ).averageFeeMultiplier;
+  return transactionFees;
 };
