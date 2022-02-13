@@ -63,7 +63,7 @@ const RegisterAddress = (props) => {
       </div>
       <div className="pt-3">
         <label className="text-sm" htmlFor="input_private_key">
-          Private Key（送金用ウォレットのKey）
+          Private Key（ウォレットのKey） *取り扱いには注意してください！
         </label>
         <input
           className="input-numbering-address"
