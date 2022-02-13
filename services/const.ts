@@ -1,1 +1,1 @@
-./const.staging.ts
+./const.prod.ts
