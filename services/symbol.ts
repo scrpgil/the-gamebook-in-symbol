@@ -133,9 +133,9 @@ export const createTransferTransaction = async (
       const networkType = await repositoryFactory.getNetworkType().toPromise();
       const { currency } = await repositoryFactory.getCurrencies().toPromise();
       let fee = maxFee;
-      if (fee <= 100) {
+      if (fee < 100) {
         fee = 100;
-      } else if (fee >= 2000000) {
+      } else if (fee > 2000000) {
         fee = 2000000;
       }
 

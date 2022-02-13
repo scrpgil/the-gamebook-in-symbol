@@ -79,6 +79,7 @@ const RegisterAddress = (props) => {
           color="light"
           size="small"
           className="h-8"
+          disabled={!(registAddressText && registAddress && privKey)}
           onClick={() => {
             onClick(registAddressText, registAddress, privKey);
           }}
