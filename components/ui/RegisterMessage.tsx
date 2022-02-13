@@ -4,14 +4,11 @@ import { NUMBERING_ADDRESS } from 'services/const';
 import { createTransferTransaction } from 'services/symbol';
 
 const RegisterMessage = (props) => {
-  const { onClick } = props;
+  const { onClick, fee } = props;
   const [registAddressText, setRegistAddressText] = useState('');
   const [registMessage, setRegistMessage] = useState('');
   const [privKey, setPrivKey] = useState('');
 
-  const calcTransactionFee = async (message: string) => {
-    let tt = await createTransferTransaction(NUMBERING_ADDRESS, message, privKey);
-  };
   const handleChange = async (event: any) => {
     switch (event.target.name) {
       case 'input_private_key':
@@ -35,7 +32,6 @@ const RegisterMessage = (props) => {
         <br />
         もし番地がまた登録されていない場合は、書き込みできません。
       </p>
-      <p className="py-2">先に番地登録をするなら【regist_address】へ</p>
       <div className="pt-3">
         <label className="text-sm" htmlFor="regist_address">
           番地名
@@ -50,7 +46,7 @@ const RegisterMessage = (props) => {
       </div>
       <div className="pt-3">
         <label className="text-sm" htmlFor="regist_sym_address">
-          メッセージ
+          メッセージ({registMessage.length}/1024)
         </label>
         <textarea
           className="input-numbering-address"
@@ -77,11 +73,14 @@ const RegisterMessage = (props) => {
           color="light"
           size="small"
           className="h-8"
+          disabled={
+            !(registAddressText && registMessage && registMessage.length <= 1024 && privKey)
+          }
           onClick={() => {
             onClick(registAddressText, registMessage, privKey);
           }}
         >
-          Regist to Message
+          Regist to Message（Fee: Max 2.0xym）
         </IonButton>
       </div>
     </div>

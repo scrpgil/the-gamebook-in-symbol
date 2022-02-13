@@ -8,9 +8,7 @@ import {
   IonPage,
   IonTitle,
   IonToolbar,
-  useIonAlert,
   useIonLoading,
-  useIonViewDidEnter,
   useIonViewWillEnter,
 } from '@ionic/react';
 import Empty from 'components/ui/Empty';
@@ -30,6 +28,7 @@ import {
   replaceNumberingAnchor,
 } from '../../services/gamebook';
 import {
+  calcTransactionFee,
   createTransferTransaction,
   getAllRawMessages,
   getAllTransaction,
@@ -39,7 +38,6 @@ import {
 import { getHashVariable, replaceImage, sanitize } from '../../services/util';
 
 const Home: React.FC = () => {
-  const [present] = useIonAlert();
   const [loadingPresent, loadingDismiss] = useIonLoading();
 
   const [address, setAddress] = useState('1');
@@ -95,12 +93,16 @@ const Home: React.FC = () => {
     setTimeout(() => {
       setLoading(false);
     }, 2000);
-  });
-  useIonViewDidEnter(async () => {
+    setCalcFee();
     window.addEventListener('hashchange', hashChange, false);
   });
 
+  const setCalcFee = async () => {
+    let fee = await calcTransactionFee();
+    setFee(fee);
+  };
   const hashChange = () => {
+    setCalcFee();
     let addr = getHashVariable(document.URL) ? getHashVariable(document.URL) : '1';
     fetchAddrss(addr);
   };
@@ -115,14 +117,15 @@ const Home: React.FC = () => {
         mode: 'ios',
       });
       let msg = await createRegistAddressMessage(registAddressText, registAddress);
-      let tt = await createTransferTransaction(NUMBERING_ADDRESS, msg, privKey);
+      console.log(fee);
+      let tt = await createTransferTransaction(NUMBERING_ADDRESS, msg, privKey, fee);
       await transactionAnnounce(tt);
       setTimeout(() => {
-        location.href = `${location.protocol}//${location.host}/#${registAddress}`;
+        location.href = `${location.protocol}//${location.host}/#${registAddressText}`;
         location.reload();
-      }, 50000);
+      }, 30000);
     } catch (e) {
-      loadingDismiss();
+      await loadingDismiss();
     }
   };
 
@@ -130,22 +133,22 @@ const Home: React.FC = () => {
    * メッセージの登録
    */
   const registToMessage = async (registAddressText, registMessage, privKey) => {
-    let nmm = await getSearchAddressMessages(registAddressText, numberingMessages.current);
-    if (nmm) {
-      try {
+    try {
+      let nmm = await getSearchAddressMessages(registAddressText, numberingMessages.current);
+      if (nmm) {
         loadingPresent({
           message: 'メッセージ書き込み中...',
           mode: 'ios',
         });
-        let tt = await createTransferTransaction(nmm.address, registMessage, privKey);
+        let tt = await createTransferTransaction(nmm.address, registMessage, privKey, fee);
         await transactionAnnounce(tt);
         setTimeout(() => {
           location.href = `${location.protocol}//${location.host}/#${nmm.text}`;
           location.reload();
-        }, 50000);
-      } catch (e) {
-        loadingDismiss();
+        }, 30000);
       }
+    } catch (e) {
+      await loadingDismiss();
     }
   };
 
@@ -196,10 +199,10 @@ const Home: React.FC = () => {
                   <span>【{readAddress?.text}】 </span>
                 </div>
                 {readAddress?.text === 'regist_message' && (
-                  <RegisterMessage onClick={registToMessage} />
+                  <RegisterMessage onClick={registToMessage} fee={fee} />
                 )}
                 {readAddress?.text === 'regist_address' && (
-                  <RegisterAddress onClick={registToAddress} />
+                  <RegisterAddress onClick={registToAddress} fee={fee} />
                 )}
                 {readAddress?.text !== 'regist_address' && readAddress?.text !== 'regist_message' && (
                   <>
