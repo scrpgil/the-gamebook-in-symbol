@@ -119,7 +119,7 @@ const Home: React.FC = () => {
       setTimeout(() => {
         location.href = `${location.protocol}//${location.host}/#${registAddress}`;
         location.reload();
-      }, 30000);
+      }, 50000);
     } catch (e) {
       loadingDismiss();
     }
@@ -141,7 +141,7 @@ const Home: React.FC = () => {
         setTimeout(() => {
           location.href = `${location.protocol}//${location.host}/#${nmm.text}`;
           location.reload();
-        }, 30000);
+        }, 50000);
       } catch (e) {
         loadingDismiss();
       }

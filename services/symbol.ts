@@ -2,7 +2,6 @@ import {
   Account,
   Address,
   Deadline,
-  NetworkType,
   Page,
   PlainMessage,
   RepositoryFactoryHttp,
@@ -101,7 +100,6 @@ export const createTransferTransaction = async (
 ): Promise<SignedTransaction> => {
   return new Promise(async (resolve, reject) => {
     try {
-      console.log(privateKey, rawAddress, message);
       if (!(privateKey && rawAddress && message)) {
         reject(null);
       }
