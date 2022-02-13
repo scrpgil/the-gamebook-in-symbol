@@ -14,7 +14,7 @@ const Footer = (props) => {
       <span>
         created by 2022.{' '}
         <a
-          href="https://github.com/scrpgil/TheWorldIsAGamebookInSymbol"
+          href="https://github.com/scrpgil/the-gamebook-in-symbol"
           rel="noreferrer"
           target="_blank"
         >
