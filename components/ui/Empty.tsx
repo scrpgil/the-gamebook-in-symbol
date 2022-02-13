@@ -6,12 +6,12 @@ const Empty = () => (
       </p>
       <div>
         番地を登録するなら「
-        <a href="?address=regist_address">regist_address</a>
+        <a href="#regist_address">regist_address</a>
         」へ
       </div>
       <div>
         メッセージを登録するなら「
-        <a href="?address=regist_message">regist_message</a>
+        <a href="#regist_message">regist_message</a>
         」へ
       </div>
     </span>

@@ -25,7 +25,7 @@ export const replaceNumberingAnchor = (value: string): string => {
   value = value.replace(/</g, '&lt;');
   var regexp_url = /「([0-9]*)」/g; // ']))/;
   var regexp_makeLink = (_: any, url: string, ___: any, ____: string) => {
-    const hash = window.location.pathname + '?address=' + url;
+    const hash = '#' + url;
     return `「<a class="border-b" href="${hash}">${url}</a>」`;
   };
   return value.replace(regexp_url, regexp_makeLink);

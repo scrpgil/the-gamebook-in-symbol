@@ -12,6 +12,14 @@ export const getQueryVariable = (url: string, variable: string): string => {
     return '';
   }
 };
+export const getHashVariable = (url: string): string => {
+  try {
+    const hash = new URL(url).hash.substr(1);
+    return hash;
+  } catch (e) {
+    return '';
+  }
+};
 export const sanitize = (str: string) => {
   if (str) {
     return str

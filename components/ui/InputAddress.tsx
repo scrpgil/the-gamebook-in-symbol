@@ -2,8 +2,7 @@ import { IonButton } from '@ionic/react';
 import { useState } from 'react';
 
 const InputAddress = (props) => {
-  const { onClick } = props;
-  const [address, setAddress] = useState('1');
+  const { onClick, address, setAddress } = props;
 
   const handleChange = async (event: any) => {
     switch (event.target.name) {

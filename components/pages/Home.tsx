@@ -8,6 +8,8 @@ import {
   IonPage,
   IonTitle,
   IonToolbar,
+  useIonAlert,
+  useIonViewDidEnter,
   useIonViewWillEnter,
 } from '@ionic/react';
 import Empty from 'components/ui/Empty';
@@ -17,7 +19,7 @@ import RegisterAddress from 'components/ui/RegisterAddress';
 import RegisterMessage from 'components/ui/RegisterMessage';
 import { helpCircleOutline } from 'ionicons/icons';
 
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import {
   createRegistAddressMessage,
   decodeNumberingAddress,
@@ -31,14 +33,15 @@ import {
   NUMBERING_ADDRESS,
   transactionAnnounce,
 } from '../../services/symbol';
-import { getQueryVariable, replaceImage, sanitize } from '../../services/util';
+import { getHashVariable, replaceImage, sanitize } from '../../services/util';
 
 const Home: React.FC = () => {
+  const [present] = useIonAlert();
   const [address, setAddress] = useState('1');
   const [readAddress, setReadAddress] = useState<NumberingAddress>();
   const [message, setMessage] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
-  const [numberingMessages, setNumberingAddress] = useState<NumberingAddress[]>([]);
+  const numberingMessages = useRef<NumberingAddress[]>([]);
   const [fee, setFee] = useState(0);
 
   const getSearchAddressMessages = async (
@@ -70,10 +73,8 @@ const Home: React.FC = () => {
     const transactions = await getAllTransaction();
     const rawMessages = await getAllRawMessages(transactions);
     const nm: NumberingAddress[] = await decodeNumberingAddress(rawMessages);
-    setNumberingAddress(nm);
-    let addr = getQueryVariable(document.URL, 'address')
-      ? getQueryVariable(document.URL, 'address')
-      : '1';
+    numberingMessages.current = nm;
+    let addr = getHashVariable(document.URL) ? getHashVariable(document.URL) : '1';
     setAddress(addr);
     setReadAddress({ text: addr, address: '' });
     let nmm = await getSearchAddressMessages(addr, nm);
@@ -84,6 +85,14 @@ const Home: React.FC = () => {
       setLoading(false);
     }, 2000);
   });
+  useIonViewDidEnter(async () => {
+    window.addEventListener('hashchange', hashChange, false);
+  });
+
+  const hashChange = () => {
+    let addr = getHashVariable(document.URL) ? getHashVariable(document.URL) : '1';
+    fetchAddrss(addr);
+  };
 
   /**
    * 番地の登録
@@ -98,7 +107,7 @@ const Home: React.FC = () => {
    * メッセージの登録
    */
   const registToMessage = async (registAddressText, registMessage, privKey) => {
-    let nmm = await getSearchAddressMessages(registAddressText, numberingMessages);
+    let nmm = await getSearchAddressMessages(registAddressText, numberingMessages.current);
     if (nmm) {
       let tt = await createTransferTransaction(nmm.address, registMessage, privKey);
       transactionAnnounce(tt);
@@ -111,16 +120,9 @@ const Home: React.FC = () => {
   const fetchAddrss = async (fetchAddrss: string) => {
     setAddress(fetchAddrss);
     setMessage('');
-    let newurl =
-      window.location.protocol +
-      '//' +
-      window.location.host +
-      window.location.pathname +
-      '?address=' +
-      fetchAddrss;
-    window.history.pushState({ path: newurl }, '', newurl);
+    location.hash = fetchAddrss;
     setReadAddress({ text: fetchAddrss, address: '' });
-    let nmm = await getSearchAddressMessages(fetchAddrss, numberingMessages);
+    let nmm = await getSearchAddressMessages(fetchAddrss, numberingMessages.current);
     if (nmm) {
       getNumberingAddress(nmm);
     }
@@ -136,7 +138,18 @@ const Home: React.FC = () => {
         <IonToolbar mode="ios" color="dark">
           <IonTitle>The world is a gamebook</IonTitle>
           <IonButtons slot="primary">
-            <IonButton>
+            <IonButton
+              onClick={() =>
+                present({
+                  cssClass: 'my-css',
+                  header: '遊び方',
+                  message:
+                    'ゲームブック (Gamebook) は、読者の選択によってストーリーの展開と結末が変わるように作られています。文章は、数百個のパラグラフに分割されており、ルールに沿って読み進めることになります。',
+                  buttons: ['Cancel', { text: 'Ok', handler: (d) => console.log('ok pressed') }],
+                  onDidDismiss: (e) => console.log('did dismiss'),
+                })
+              }
+            >
               <IonIcon slot="icon-only" icon={helpCircleOutline} />
             </IonButton>
           </IonButtons>
@@ -144,7 +157,7 @@ const Home: React.FC = () => {
       </IonHeader>
       <IonContent>
         <div className="fetch-wrapper px-4">
-          <InputAddress onClick={fetchAddrss} />
+          <InputAddress address={address} setAddress={setAddress} onClick={fetchAddrss} />
           <hr />
           <div className="fetch-console-wrapper pt-3 px-2 whitespace-pre-wrap">
             {!loading && (
