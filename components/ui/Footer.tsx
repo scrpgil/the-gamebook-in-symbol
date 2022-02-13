@@ -1,3 +1,5 @@
+import { SYMBOL_EXPLORER } from 'services/symbol';
+
 const Footer = (props) => {
   const { readAddress } = props;
   return (
@@ -5,7 +7,7 @@ const Footer = (props) => {
       <span
         className="border-b mr-2"
         onClick={() => {
-          let url = 'https://testnet.symbol.fyi/accounts/' + readAddress?.address;
+          let url = SYMBOL_EXPLORER + 'accounts/' + readAddress?.address;
           window.open(url, '_blank');
         }}
       >
