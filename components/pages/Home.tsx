@@ -194,7 +194,7 @@ const Home: React.FC = () => {
           <div className="fetch-console-wrapper pt-3 px-2 whitespace-pre-wrap">
             {!loading && (
               <>
-                <div className="address-wrapper pt-3">
+                <div className="address-wrapper pt-3 pb-2">
                   <span>【{readAddress?.text}】 </span>
                 </div>
                 {readAddress?.text === '書き込み(write)' && (
