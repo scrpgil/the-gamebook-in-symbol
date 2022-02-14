@@ -25,7 +25,7 @@ export const getAllTransaction = (
       while (loop) {
         const res = await getTransaction(rawAddress, pageNumber);
         if (res && res.length > 0) {
-          transactions = transactions.concat(res);
+          transactions = res.reverse().concat(transactions);
         } else {
           loop = false;
         }
