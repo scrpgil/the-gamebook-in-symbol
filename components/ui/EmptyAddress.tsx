@@ -1,7 +1,7 @@
 const EmptyAddress = () => (
   <div>
     <span>
-      <p>
+      <p className="pt-2 pb-3">
         <i>「ここには何もない」</i>
       </p>
       <div>
