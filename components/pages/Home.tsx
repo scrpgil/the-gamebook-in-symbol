@@ -117,7 +117,6 @@ const Home: React.FC = () => {
         mode: 'ios',
       });
       let msg = await createRegistAddressMessage(registAddressText, registAddress);
-      console.log(fee);
       let tt = await createTransferTransaction(NUMBERING_ADDRESS, msg, privKey, fee);
       await transactionAnnounce(tt);
       setTimeout(() => {
@@ -141,6 +140,7 @@ const Home: React.FC = () => {
           mode: 'ios',
         });
         let tt = await createTransferTransaction(nmm.address, registMessage, privKey, fee);
+        console.log(tt);
         await transactionAnnounce(tt);
         setTimeout(() => {
           location.href = `${location.protocol}//${location.host}/#${nmm.text}`;
@@ -198,13 +198,13 @@ const Home: React.FC = () => {
                 <div className="address-wrapper pt-3">
                   <span>【{readAddress?.text}】 </span>
                 </div>
-                {readAddress?.text === 'regist_message' && (
+                {readAddress?.text === '書き込み(write)' && (
                   <RegisterMessage onClick={registToMessage} fee={fee} />
                 )}
-                {readAddress?.text === 'regist_address' && (
+                {readAddress?.text === '登録(regist)' && (
                   <RegisterAddress onClick={registToAddress} fee={fee} />
                 )}
-                {readAddress?.text !== 'regist_address' && readAddress?.text !== 'regist_message' && (
+                {readAddress?.text !== '登録(regist)' && readAddress?.text !== '書き込み(write)' && (
                   <>
                     <div
                       className="whitespace-pre-wrap leading-7"
@@ -227,7 +227,7 @@ const Home: React.FC = () => {
         </div>
       </IonContent>
       <IonFooter>
-        <Footer />
+        <Footer readAddress={readAddress} />
       </IonFooter>
     </IonPage>
   );

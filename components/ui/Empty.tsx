@@ -6,8 +6,8 @@ const Empty = () => (
       </p>
       <div>
         メッセージを登録するなら「
-        <a className="border-b-2" href="#regist_message">
-          regist_message
+        <a className="border-b-2" href="#%E6%9B%B8%E3%81%8D%E8%BE%BC%E3%81%BF(write)">
+          書き込み(write)
         </a>
         」へ
       </div>

@@ -49,7 +49,7 @@ const RegisterMessage = (props) => {
           メッセージ({registMessage.length}/1024)
         </label>
         <textarea
-          className="input-numbering-address"
+          className="input-numbering-address h-60"
           name="regist_message"
           value={registMessage}
           onChange={handleChange}

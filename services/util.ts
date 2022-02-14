@@ -15,7 +15,7 @@ export const getQueryVariable = (url: string, variable: string): string => {
 export const getHashVariable = (url: string): string => {
   try {
     const hash = new URL(url).hash.substr(1);
-    return hash;
+    return decodeURIComponent(hash);
   } catch (e) {
     return '';
   }

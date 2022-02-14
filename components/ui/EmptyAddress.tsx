@@ -6,8 +6,8 @@ const EmptyAddress = () => (
       </p>
       <div>
         番地を登録するなら「
-        <a className="border-b-2" href="#regist_address">
-          regist_address
+        <a className="border-b-2" href="#%E7%99%BB%E9%8C%B2(regist)">
+          登録(regist)
         </a>
         」へ
       </div>

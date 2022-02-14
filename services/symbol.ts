@@ -133,11 +133,12 @@ export const createTransferTransaction = async (
       const networkType = await repositoryFactory.getNetworkType().toPromise();
       const { currency } = await repositoryFactory.getCurrencies().toPromise();
       let fee = maxFee;
-      if (fee < 100) {
-        fee = 100;
+      if (fee < 10000) {
+        fee = 10000;
       } else if (fee > 2000000) {
         fee = 2000000;
       }
+      console.log(fee);
 
       const transferTransaction = TransferTransaction.create(
         Deadline.create(epochAdjustment),
@@ -165,6 +166,7 @@ export const transactionAnnounce = async (signedTransaction: SignedTransaction) 
   const repositoryFactory = new RepositoryFactoryHttp(NODE_URL);
   const transactionRepository = repositoryFactory.createTransactionRepository();
   const response = await transactionRepository.announce(signedTransaction).toPromise();
+  console.log(response);
   return response;
 };
 
