@@ -28,7 +28,7 @@ const RegisterMessage = (props) => {
       <p className="py-2">
         あなたは任意の番地にメッセージを記録することができます。
         <br />
-        もし番地がまた登録されていない場合は、書き込みできません。
+        もし番地が登録されていない場合は、書き込みできません。
       </p>
       <div className="pt-3">
         <label className="text-sm" htmlFor="regist_address">
