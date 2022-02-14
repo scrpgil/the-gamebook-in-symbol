@@ -16,7 +16,7 @@ const InputAddress = (props) => {
 
   return (
     <>
-      <p className="title">Gamebook system using block chains.</p>
+      <p className="title pt-1">Gamebook system using block chains.</p>
       <input
         className="input-numbering-address"
         type="text"
