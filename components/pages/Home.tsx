@@ -206,7 +206,7 @@ const Home: React.FC = () => {
                 {readAddress?.text !== '登録(regist)' && readAddress?.text !== '書き込み(write)' && (
                   <>
                     <div
-                      className="whitespace-pre-wrap leading-7"
+                      className="whitespace-pre-wrap leading-6"
                       dangerouslySetInnerHTML={{
                         __html: replaceImage(replaceNumberingAnchor(sanitize(message))),
                       }}
