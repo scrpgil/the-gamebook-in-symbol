@@ -140,7 +140,6 @@ const Home: React.FC = () => {
           mode: 'ios',
         });
         let tt = await createTransferTransaction(nmm.address, registMessage, privKey, fee);
-        console.log(tt);
         await transactionAnnounce(tt);
         setTimeout(() => {
           location.href = `${location.protocol}//${location.host}/#${nmm.text}`;
