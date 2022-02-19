@@ -45,7 +45,7 @@ export const replaceImage = (str: string): string => {
     return (
       '<a class="autolink-image-wrapper" target="_blank" href="' +
       hash +
-      '"><img class="autolink-image" style="max-width:100px; max-height: 100px;" src="' +
+      '"><img class="autolink-image" src="' +
       hash +
       '"/></a>'
     );
