@@ -69,8 +69,12 @@ const Home: React.FC = () => {
 
   const getAddressMessages = async (address: string) => {
     const transactions = await getTransaction(address);
-    if (transactions && transactions.length > 0 && transactions[0]?.message?.payload) {
-      setMessage(transactions[0].message.payload);
+    if (transactions && transactions.length > 0) {
+      for (const transaction of transactions) {
+        if (transaction?.message?.payload) {
+          setMessage(transaction.message.payload);
+        }
+      }
     }
   };
 
