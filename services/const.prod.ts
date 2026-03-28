@@ -1,5 +1,5 @@
-/** TESTNETのURL */
-export const NODE_URL = 'https://sym-main.opening-line.jp:3001';
+/** MAINNETのURL */
+export const NODE_URL = 'https://xym.allnodes.me:3001';
 
 /** 番地用アドレス */
 export const NUMBERING_ADDRESS = 'NC3F3E2EZT4JRPLUSYMD2QHWKW353GJUBP2NSPA';

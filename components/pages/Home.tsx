@@ -74,27 +74,30 @@ const Home: React.FC = () => {
     }
   };
 
-  useIonViewWillEnter(async () => {
-    setLoading(true);
-    const transactions = await getAllTransaction();
-    const rawMessages = await getAllRawMessages(transactions);
-    const nm: NumberingAddress[] = await decodeNumberingAddress(rawMessages);
-    numberingMessages.current = nm;
-    let addr = getHashVariable(document.URL) ? getHashVariable(document.URL) : '1';
-    setAddress(addr);
-    setReadAddress({ text: addr, address: '' });
-    let nmm = await getSearchAddressMessages(addr, nm);
-    if (nmm) {
-      getNumberingAddress(nmm);
-      setIsEmptyAddress(false);
-    } else {
-      setIsEmptyAddress(true);
-    }
-    setTimeout(() => {
-      setLoading(false);
-    }, 2000);
-    setCalcFee();
-    window.addEventListener('hashchange', hashChange, false);
+  useIonViewWillEnter(() => {
+    const init = async () => {
+      setLoading(true);
+      const transactions = await getAllTransaction();
+      const rawMessages = await getAllRawMessages(transactions);
+      const nm: NumberingAddress[] = await decodeNumberingAddress(rawMessages);
+      numberingMessages.current = nm;
+      let addr = getHashVariable(document.URL) ? getHashVariable(document.URL) : '1';
+      setAddress(addr);
+      setReadAddress({ text: addr, address: '' });
+      let nmm = await getSearchAddressMessages(addr, nm);
+      if (nmm) {
+        getNumberingAddress(nmm);
+        setIsEmptyAddress(false);
+      } else {
+        setIsEmptyAddress(true);
+      }
+      setTimeout(() => {
+        setLoading(false);
+      }, 2000);
+      setCalcFee();
+      window.addEventListener('hashchange', hashChange, false);
+    };
+    init();
   });
 
   const setCalcFee = async () => {
